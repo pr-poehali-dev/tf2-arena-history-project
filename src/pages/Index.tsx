@@ -6,6 +6,7 @@ import Icon from "@/components/ui/icon";
 
 const Index = () => {
   const [selectedCharacter, setSelectedCharacter] = useState<number | null>(null);
+  const [selectedGameMode, setSelectedGameMode] = useState<number | null>(null);
 
   const characters = [
     {
@@ -129,12 +130,18 @@ const Index = () => {
           <h2 className="text-5xl font-bold mb-4 text-center">
             Бесконечная <span className="text-primary">Война</span>
           </h2>
-          <p className="text-center text-muted-foreground text-xl mb-16 max-w-2xl mx-auto">
+          <p className="text-center text-muted-foreground text-xl mb-8 max-w-2xl mx-auto">
             Каждый день. Одни и те же точки. Один и тот же гравий. Бессмысленность возведённая в абсолют.
+          </p>
+          <p className="text-center text-primary text-sm mb-16 animate-pulse">
+            Нажми на карточку, чтобы узнать правила режима
           </p>
           
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <Card className="bg-primary/10 border-primary/20 hover:scale-105 transition-transform">
+            <Card 
+              onClick={() => setSelectedGameMode(0)}
+              className="bg-primary/10 border-primary/20 hover:scale-105 transition-transform cursor-pointer"
+            >
               <CardContent className="pt-6 text-center">
                 <Icon name="MapPin" size={48} className="mx-auto mb-4 text-primary" />
                 <h3 className="text-2xl font-bold mb-3">Control Points</h3>
@@ -144,7 +151,10 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-primary/10 border-primary/20 hover:scale-105 transition-transform">
+            <Card 
+              onClick={() => setSelectedGameMode(1)}
+              className="bg-primary/10 border-primary/20 hover:scale-105 transition-transform cursor-pointer"
+            >
               <CardContent className="pt-6 text-center">
                 <Icon name="Flag" size={48} className="mx-auto mb-4 text-primary" />
                 <h3 className="text-2xl font-bold mb-3">Capture the Flag</h3>
@@ -154,7 +164,10 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-primary/10 border-primary/20 hover:scale-105 transition-transform">
+            <Card 
+              onClick={() => setSelectedGameMode(2)}
+              className="bg-primary/10 border-primary/20 hover:scale-105 transition-transform cursor-pointer"
+            >
               <CardContent className="pt-6 text-center">
                 <Icon name="Package" size={48} className="mx-auto mb-4 text-primary" />
                 <h3 className="text-2xl font-bold mb-3">Payload</h3>
@@ -231,6 +244,121 @@ const Index = () => {
                 <h3 className="text-xl font-bold text-primary">История попадания на арену</h3>
                 <p className="text-foreground leading-relaxed">
                   {characters[selectedCharacter].backstory}
+                </p>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={selectedGameMode !== null} onOpenChange={() => setSelectedGameMode(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          {selectedGameMode === 0 && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="p-4 bg-primary/20 rounded-lg">
+                    <Icon name="MapPin" size={48} className="text-primary" />
+                  </div>
+                  <div>
+                    <DialogTitle className="text-3xl">Control Points</DialogTitle>
+                    <Badge variant="outline" className="mt-2">Захват территории</Badge>
+                  </div>
+                </div>
+              </DialogHeader>
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-primary">Правила режима</h3>
+                <p className="text-foreground leading-relaxed">
+                  На карте расположено несколько контрольных точек (обычно 5). Цель — захватить все точки противника или удерживать большинство до окончания времени.
+                </p>
+                <h4 className="text-lg font-semibold text-primary">Механика захвата:</h4>
+                <ul className="list-disc list-inside space-y-2 text-foreground">
+                  <li>Встань на точку и жди — она постепенно перекрашивается в твой цвет</li>
+                  <li>Чем больше игроков на точке, тем быстрее захват (макс. 3х скорость)</li>
+                  <li>Если на точке есть враги, захват останавливается</li>
+                  <li>Нейтральные точки может захватить любая команда</li>
+                  <li>Чтобы захватить вражескую точку, сначала нужно захватить предыдущую</li>
+                </ul>
+                <h4 className="text-lg font-semibold text-primary">Стратегия:</h4>
+                <p className="text-foreground leading-relaxed">
+                  В начале раунда обе команды бегут к центральной точке. Кто захватит центр первым — получает преимущество и может двигаться вперёд. 
+                  Engineer ставит телепорты для быстрой доставки команды, Medic накапливает Убер для решающего прорыва, 
+                  а Scout использует двойной прыжок для быстрого захвата. Главное правило — никогда не оставляй точки без защиты!
+                </p>
+              </div>
+            </>
+          )}
+          {selectedGameMode === 1 && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="p-4 bg-primary/20 rounded-lg">
+                    <Icon name="Flag" size={48} className="text-primary" />
+                  </div>
+                  <div>
+                    <DialogTitle className="text-3xl">Capture the Flag</DialogTitle>
+                    <Badge variant="outline" className="mt-2">Кража разведданных</Badge>
+                  </div>
+                </div>
+              </DialogHeader>
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-primary">Правила режима</h3>
+                <p className="text-foreground leading-relaxed">
+                  Классический режим CTF. У каждой команды есть портфель с секретными документами (флаг) на базе. 
+                  Цель — украсть портфель врага и принести на свою базу. Первая команда, захватившая 3 портфеля, побеждает.
+                </p>
+                <h4 className="text-lg font-semibold text-primary">Механика захвата:</h4>
+                <ul className="list-disc list-inside space-y-2 text-foreground">
+                  <li>Подойди к вражескому портфелю и возьми его — он появится у тебя за спиной</li>
+                  <li>Принеси портфель на свою базу к своему флагу и коснись его</li>
+                  <li>Если тебя убьют, портфель упадёт на землю на 60 секунд</li>
+                  <li>Союзники могут подобрать упавший портфель и продолжить доставку</li>
+                  <li>Враги могут вернуть свой портфель, коснувшись его</li>
+                  <li>Нельзя захватить вражеский портфель, если твой портфель украден</li>
+                </ul>
+                <h4 className="text-lg font-semibold text-primary">Стратегия:</h4>
+                <p className="text-foreground leading-relaxed">
+                  Scout — лучший класс для захвата благодаря скорости. Engineer ставит телепорт для быстрой доставки портфеля. 
+                  Spy маскируется под врага и крадёт портфель незаметно. Heavy и Soldier защищают свой портфель от налётчиков. 
+                  Medic с Убером помогает прорваться через защиту. Главное — командная работа: одни нападают, другие защищают!
+                </p>
+              </div>
+            </>
+          )}
+          {selectedGameMode === 2 && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="p-4 bg-primary/20 rounded-lg">
+                    <Icon name="Package" size={48} className="text-primary" />
+                  </div>
+                  <div>
+                    <DialogTitle className="text-3xl">Payload</DialogTitle>
+                    <Badge variant="outline" className="mt-2">Доставка бомбы</Badge>
+                  </div>
+                </div>
+              </DialogHeader>
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-primary">Правила режима</h3>
+                <p className="text-foreground leading-relaxed">
+                  Команда BLU толкает бомбу на тележке по рельсам к базе RED. Команда RED должна остановить доставку. 
+                  Если BLU успеет довезти бомбу до конца за отведённое время, база RED взрывается и BLU побеждает.
+                </p>
+                <h4 className="text-lg font-semibold text-primary">Механика доставки:</h4>
+                <ul className="list-disc list-inside space-y-2 text-foreground">
+                  <li>Игроки BLU встают рядом с тележкой — она начинает двигаться</li>
+                  <li>Чем больше игроков у тележки, тем быстрее она едет (макс. 3х скорость)</li>
+                  <li>Тележка лечит и даёт боеприпасы игрокам BLU рядом с ней</li>
+                  <li>Если рядом есть игроки RED, тележка останавливается</li>
+                  <li>Если BLU отходят, через 30 секунд тележка откатывается назад</li>
+                  <li>На тележке есть контрольные точки — при достижении время добавляется</li>
+                </ul>
+                <h4 className="text-lg font-semibold text-primary">Стратегия:</h4>
+                <p className="text-foreground leading-relaxed">
+                  BLU: Scout быстро захватывает тележку, Heavy и Soldier давят вперёд, Engineer ставит телепорт для подкрепления. 
+                  Medic с Убером прорывает защиту на контрольных точках. 
+                  RED: Engineer ставит турель на пути тележки, Demoman закладывает липучки, Sniper держит дальние подходы, 
+                  Spy саботирует атаку с тыла. Главное для RED — держать оборону на контрольных точках!
                 </p>
               </div>
             </>
